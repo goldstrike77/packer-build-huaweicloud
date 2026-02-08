@@ -20,6 +20,6 @@ artifact = {
   security_groups             = ["feb8886c-8a65-4411-a63b-97ab19344f58"]
   volume_type                 = "GPSSD"
   volume_size                 = 40
-  kms_key_id                  = "c89f7296-ed4b-4bf6-9e2e-143e66de6054"
+  kms_key_id                  = "c309123b-388c-4158-9e69-5de95e03ea8c"
   ssh_username                = "root"
 }
