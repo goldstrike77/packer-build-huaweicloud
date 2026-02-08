@@ -1,0 +1,28 @@
+name: Creating a HuaweiCloud private image using HashiCorp Packer.
+
+on:
+ push:
+   branches:
+   - v0.1
+ pull_request: {}
+
+env:
+  HW_SECRET_KEY: ${{ secrets.HW_SECRET_KEY }}
+  HW_ACCESS_KEY: ${{ secrets.HW_ACCESS_KEY }}
+
+jobs:
+  build-artifact:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      version_fingerprint: ${{ steps.hcp.outputs.version_fingerprint }}
+    steps:
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        id: setup
+
+      - name: Packer Init
+        run: packer init .
+
+      - name: Packer Build - Branches
+        run: ./build.sh
