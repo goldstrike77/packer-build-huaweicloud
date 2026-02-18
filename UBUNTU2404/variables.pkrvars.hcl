@@ -14,6 +14,7 @@ artifact = {
   associate_public_ip_address = true
   eip_type                    = "5_bgp"
   eip_bandwidth_size          = 100
+  user_data_file              = "user_data.sh"
   ssh_ip_version              = "4"
   vpc_id                      = "5151944c-111e-45f5-bbfd-a6c5a0274a84"
   subnets                     = ["e0632eb5-ae1d-442a-af34-0c85b7ca9586"]

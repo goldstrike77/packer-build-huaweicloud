@@ -1,9 +1,9 @@
 variable "artifact" {}
 
 source "huaweicloud-ecs" "images" {
-  region                      = var.artifact.region
+  region                      = lookup(var.artifact, "region", "cn-north-4")
   image_name                  = "${var.artifact.image_name}-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
-  flavor                      = var.artifact.flavor
+  flavor                      = lookup(var.artifact, "flavor", "c6.large.2")
   image_description           = lookup(var.artifact, "image_description", "")
   image_type                  = lookup(var.artifact, "image_type", "system")
   image_tags                  = lookup(var.artifact, "image_tags", {})
@@ -13,28 +13,31 @@ source "huaweicloud-ecs" "images" {
   associate_public_ip_address = lookup(var.artifact, "associate_public_ip_address", true)
   eip_type                    = lookup(var.artifact, "eip_type", "5_bgp")
   eip_bandwidth_size          = lookup(var.artifact, "eip_bandwidth_size", 100)
+  user_data_file              = lookup(var.artifact, "user_data_file", "user_data.sh")
   ssh_ip_version              = lookup(var.artifact, "ssh_ip_version", "4")
   vpc_id                      = lookup(var.artifact, "vpc_id", "")
   subnets                     = lookup(var.artifact, "subnets", [])
   security_groups             = lookup(var.artifact, "security_groups", [])
   volume_type                 = lookup(var.artifact, "volume_type", "GPSSD")
   volume_size                 = lookup(var.artifact, "volume_size", "40")
-  kms_key_id                  = lookup(var.artifact, "kms_key_id", "")
-  ssh_username                = var.artifact.ssh_username
+  #  kms_key_id                  = lookup(var.artifact, "kms_key_id", "")
+  ssh_username = lookup(var.artifact, "ssh_username", "root")
 }
 
 build {
   sources = [
     "source.huaweicloud-ecs.images"
   ]
-
   provisioner "shell" {
     inline = [
-      "apt-get update",
-      "DEBIAN_FRONTEND=noninteractive apt-get upgrade -y",
+      "sleep 5",
+      "apt-get update > /dev/null 2>&1",
+      "DEBIAN_FRONTEND=noninteractive apt-get upgrade -y > /dev/null 2>&1",
+      "apt-get install auditd -y -qq > /dev/null 2>&1",
       "rm -rf /var/lib/apt/lists/*",
-      "apt-get autoremove -y",
-      "apt-get autoclean"
+      "apt-get autoremove -y > /dev/null 2>&1",
+      "apt-get autoclean > /dev/null 2>&1",
+      "curl -ksSL https://goldstrike.oss-cn-shanghai.aliyuncs.com/hardening/scripts/cloud-level-protection.sh | bash"
     ]
   }
 }
