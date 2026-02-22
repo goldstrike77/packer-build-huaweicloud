@@ -33,7 +33,10 @@ build {
       "sleep 5",
       "yum update -y > /dev/null 2>&1",
       "yum clean all > /dev/null 2>&1",
-      "curl -ksSL https://goldstrike.oss-cn-shanghai.aliyuncs.com/hardening/scripts/cloud-level-protection.sh | bash"
+      "curl -ksSL https://goldstrike.oss-cn-shanghai.aliyuncs.com/hardening/scripts/cloud-level-protection.sh | bash",
+      "curl -k -X GET -m 20 --retry 1 --retry-delay 10 -o /tmp/install_uniagentd_OS.sh https://aom-uniagent-cn-north-4.obs.cn-north-4.myhuaweicloud.com/install_uniagentd_OS.sh",
+      "bash /tmp/install_uniagentd_OS.sh config",
+      "rm -f /tmp/install_uniagentd_OS.sh"
     ]
   }
 }
