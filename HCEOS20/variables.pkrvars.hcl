@@ -1,6 +1,6 @@
 artifact = {
   region            = "cn-north-4"                                # 区域名称。参考https://console.huaweicloud.com/apiexplorer/#/endpoint/IMS
-  image_name        = "goldimage-HCEOS20"                         # 待创建私有镜像的名称。
+  image_name        = "goldimage-HCE20"                           # 待创建私有镜像的名称。
   flavor            = "c6.large.2"                                # 云服务器的规格。
   image_description = "Automate Image Builds by HashiCorp Packer" # 待创建私有镜像的描述。
   image_type        = "system"
@@ -21,6 +21,5 @@ artifact = {
   security_groups             = ["feb8886c-8a65-4411-a63b-97ab19344f58"]
   volume_type                 = "GPSSD"
   volume_size                 = 40
-  kms_key_id                  = "c309123b-388c-4158-9e69-5de95e03ea8c"
   ssh_username                = "root"
 }

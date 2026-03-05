@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-OS="HCEOS20 UBUNTU2404"
+OS="HCE20 UBUNTU2404"
 
 for i in $OS; do
   cd $i
