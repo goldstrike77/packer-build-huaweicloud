@@ -9,7 +9,7 @@ source "huaweicloud-ecs" "images" {
   image_tags                  = lookup(var.artifact, "image_tags", {})
   wait_image_ready_timeout    = lookup(var.artifact, "wait_image_ready_timeout", "30m")
   availability_zone           = lookup(var.artifact, "availability_zone", "${var.artifact.flavor}a")
-  source_image                = var.artifact.source_image
+  source_image                = lookup(var.artifact, "source_image", "48de6f82-7ba1-459b-8c46-8888379e5d7f")
   associate_public_ip_address = lookup(var.artifact, "associate_public_ip_address", true)
   eip_type                    = lookup(var.artifact, "eip_type", "5_bgp")
   eip_bandwidth_size          = lookup(var.artifact, "eip_bandwidth_size", 100)
@@ -20,8 +20,7 @@ source "huaweicloud-ecs" "images" {
   security_groups             = lookup(var.artifact, "security_groups", [])
   volume_type                 = lookup(var.artifact, "volume_type", "GPSSD")
   volume_size                 = lookup(var.artifact, "volume_size", "40")
-  #  kms_key_id                  = lookup(var.artifact, "kms_key_id", "")
-  ssh_username = lookup(var.artifact, "ssh_username", "root")
+  ssh_username                = lookup(var.artifact, "ssh_username", "root")
 }
 
 build {
@@ -34,14 +33,19 @@ build {
       "apt-get update > /dev/null 2>&1",
       "DEBIAN_FRONTEND=noninteractive apt-get upgrade -y > /dev/null 2>&1",
       "DEBIAN_FRONTEND=noninteractive apt-get upgrade linux-generic -y > /dev/null 2>&1",
-      "apt-get install auditd libpam-pwquality -y -qq > /dev/null 2>&1",
+      "apt-get install auditd libpam-pwquality pwgen -y -qq > /dev/null 2>&1",
       "rm -rf /var/lib/apt/lists/*",
       "apt-get autoremove -y > /dev/null 2>&1",
       "apt-get autoclean > /dev/null 2>&1",
-#      "curl -ksSL https://goldstrike.oss-cn-shanghai.aliyuncs.com/hardening/scripts/huaweicloud-level-protection.sh | bash",
+      # Install UniAgent
       "curl -k -X GET -m 20 --retry 1 --retry-delay 10 -o /tmp/install_uniagentd_OS.sh https://aom-uniagent-cn-north-4.obs.cn-north-4.myhuaweicloud.com/install_uniagentd_OS.sh > /dev/null 2>&1",
       "bash /tmp/install_uniagentd_OS.sh config",
-      "rm -f /tmp/install_uniagentd_OS.sh"
+      "rm -f /tmp/install_uniagentd_OS.sh",
+      # Install HSS Agent
+      "curl -k -O 'https://hss-agent.cn-north-4.myhuaweicloud.com:10180/package/agent/linux/install/agent_Install.sh' && echo 'MASTER_IP=hss-agent.cn-north-4.myhuaweicloud.com:10180' > hostguard_setup_config.conf && echo 'SLAVE_IP=hss-agent-slave.cn-north-4.myhuaweicloud.com:10180' >> hostguard_setup_config.conf && echo 'ORG_ID=' >> hostguard_setup_config.conf && echo 'DATA_CENTER_TAG=' >> hostguard_setup_config.conf && echo 'SERVICE_PROVIDER_NAME=' >> hostguard_setup_config.conf && echo 'HOST_GROUP_ID=' >> hostguard_setup_config.conf && bash agent_Install.sh && rm -f agent_Install.sh",
+      # Hardening
+      "curl -ksSL https://goldstrike.oss-cn-shanghai.aliyuncs.com/hardening/scripts/huaweicloud-level-protection-UBUNTU2404.sh | bash"
+
     ]
   }
 }
