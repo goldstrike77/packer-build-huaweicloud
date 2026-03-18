@@ -45,7 +45,6 @@ build {
       "curl -k -O 'https://hss-agent.cn-north-4.myhuaweicloud.com:10180/package/agent/linux/install/agent_Install.sh' && echo 'MASTER_IP=hss-agent.cn-north-4.myhuaweicloud.com:10180' > hostguard_setup_config.conf && echo 'SLAVE_IP=hss-agent-slave.cn-north-4.myhuaweicloud.com:10180' >> hostguard_setup_config.conf && echo 'ORG_ID=' >> hostguard_setup_config.conf && echo 'DATA_CENTER_TAG=' >> hostguard_setup_config.conf && echo 'SERVICE_PROVIDER_NAME=' >> hostguard_setup_config.conf && echo 'HOST_GROUP_ID=' >> hostguard_setup_config.conf && bash agent_Install.sh && rm -f agent_Install.sh",
       # Hardening
       "curl -ksSL https://goldstrike.oss-cn-shanghai.aliyuncs.com/hardening/scripts/huaweicloud-level-protection-UBUNTU2404.sh | bash"
-
     ]
   }
 }
